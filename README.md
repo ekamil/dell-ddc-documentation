@@ -28,3 +28,11 @@ S2, S3, S4 - are window numbers as reported by the monitor's OSD, for example wi
 # Details
 
 See [analyse_inputs.ipynb].
+
+# Credits/acknowledgments
+
+Most of the Notebook code is by ChatGPT (gpt-4o).
+
+[ddcutil](https://www.ddcutil.com/) - without this tool, it'd be impossible to get the values to analyze.
+
+[BetterDisplay](https://github.com/waydabber/BetterDisplay) - I learnt about DDC existing thanks to BetterDisplay's community.
