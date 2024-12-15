@@ -27,7 +27,19 @@ S2, S3, S4 - are window numbers as reported by the monitor's OSD, for example wi
 
 # Details
 
-See [analyse_inputs.ipynb].
+See [analyse_inputs.ipynb](analyse_inputs.ipynb).
+
+All the values are from an Arch Linux machine, connected with the "official" Display Port cable with command
+```shell
+$ sudo ddcutil getvcp e8 e9 60
+```
+
+# Issues
+Some E8 values just don't work.
+```shell
+$ sudo ddcutil setvcp E8 0x45f3
+Verification failed for feature e8
+```
 
 # Credits/acknowledgments
 
