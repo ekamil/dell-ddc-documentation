@@ -6,36 +6,91 @@ Problem: Dell doesn't provide any documentation for this interface. One must eit
 
 # Results
 
+## Examples with m1ddc
+
+I'm using [my fork](https://github.com/ekamil/m1ddc/pull/1/files) with added support for E7
+
+```
+# Set primary input to USBC
+./m1ddc set input 27
+
+# Set order for PBP: USBC HDMI2 HDMI1 DP1
+# top left, top right, bottom right, bottom left
+./m1ddc set pbp-input 15922
+
+# Set kvm input to the order congruent with windows
+# USB3 USB1 USB2 USB4
+./m1ddc set kvm 10944
+
+# Enable PBP mode 2 by 2
+./m1ddc set pbp 65
+
+```
+
+## E8 (PBP order)
+
 To generate E8 use:
 
 ```python
-source_values = {
-            HDMI1: 0x11,
-            HDMI2: 0x12,
-            DP1: 0x0F,
-            DP2: 0x13,
-            USBC: 0x1B,
-        }
-def model(S2, S3, S4):
-    a = source_values[S2] << 0
-    b = source_values[S3] << 5
-    c = source_values[S4] << 10
-    return  a ^ b ^ c # XOR
+from enum import IntEnum
+
+class Input(IntEnum):
+    HDMI1 = 0x11  # 17
+    HDMI2 = 0x12  # 18
+    DP1 = 0x0F  # 15
+    DP2 = 0x13  # 19
+    USBC = 0x1B  # 27
+
+def model_pbp_order(S2: Input, S3: Input, S4: Input) -> int:
+    return (S2 << 0) ^ (S3 << 5) ^ (S4 << 10)
+
 ```
 
 S2, S3, S4 - are window numbers as reported by the monitor's OSD, for example with 2x2 it's: ◰ ◳ ◲ ◱.
+
+## E7 (KVM and KVM order)
+
+```python
+from enum import IntEnum
+
+KVM_NEXT_INPUT = 0xFF00
+
+class KvmUSBIdx(IntEnum):
+    USB1 = 1
+    USB2 = 2
+    USB3 = 3
+    USB4 = 4
+
+def model_kvm_inputs_by_names(
+    DP1: str,
+    DP2: str,
+    HDMI1: str,
+    HDMI2: str,
+) -> int:
+    return model_kvm_inputs(
+        DP1=KvmUSBIdx[DP1],
+        DP2=KvmUSBIdx[DP2],
+        HDMI1=KvmUSBIdx[HDMI1],
+        HDMI2=KvmUSBIdx[HDMI2],
+    )
+```
+
+`KVM_NEXT_INPUT` special value moves KVM to the next input, afaik there's no way to move to a selected input.
 
 # Details
 
 See [analyse_inputs.ipynb](analyse_inputs.ipynb).
 
 All the values are from an Arch Linux machine, connected with the "official" Display Port cable with command
+
 ```shell
 $ sudo ddcutil getvcp e8 e9 60
 ```
 
 # Issues
+
 Some E8 values just don't work.
+
 ```shell
 $ sudo ddcutil setvcp E8 0x45f3
 Verification failed for feature e8
@@ -48,3 +103,5 @@ Most of the Notebook code is by ChatGPT (gpt-4o).
 [ddcutil](https://www.ddcutil.com/) - without this tool, it'd be impossible to get the values to analyze.
 
 [BetterDisplay](https://github.com/waydabber/BetterDisplay) - I learnt about DDC existing thanks to BetterDisplay's community.
+
+[m1ddc](https://github.com/waydabber/m1ddc) - commandline tool for Macs from the author of BetterDisplay
