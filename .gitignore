@@ -12,3 +12,4 @@ wheels/
 # tools
 .ruff_cache
 .ipynb_checkpoints
+.hypothesis
