@@ -10,7 +10,7 @@ Problem: Dell doesn't provide any documentation for this interface. One must eit
 
 I'm using [my fork](https://github.com/ekamil/m1ddc/pull/1/files) with added support for E7
 
-```
+```shell
 # Set primary input to USBC
 ./m1ddc set input 27
 
@@ -25,6 +25,25 @@ I'm using [my fork](https://github.com/ekamil/m1ddc/pull/1/files) with added sup
 # Enable PBP mode 2 by 2
 ./m1ddc set pbp 65
 
+```
+
+## Examples with ddcutil
+### PBP
+```shell
+# USBC, HDMI1, DP1, DP2 in a 2x2 grid
+ddcutil setvcp E9 0x41 60 0x1B E8 0x4df2
+```
+### KVM
+KVM assigns USB output port to an input (HDMI, DP, ...), one USB can be assigned to multiple inputs. Not sure how it works then.
+
+```shell
+# assign USB3 to DP1, USB4 to DP2, USB1 to HDMI2, USB2 to HDMI2
+ddcutil setvcp E7 0x2c40
+```
+
+```shell
+# switch to the next input
+ddcutil setvcp E7 0xff00
 ```
 
 ## E8 (PBP order)
