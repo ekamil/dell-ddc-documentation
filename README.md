@@ -8,7 +8,7 @@ Problem: Dell doesn't provide any documentation for this interface. One must eit
 
 ## Examples with m1ddc
 
-I'm using [my fork](https://github.com/ekamil/m1ddc/pull/1/files) with added support for E7
+[m1ddc](https://github.com/waydabber/m1ddc) is a simple command-line utility to interact with DDC settings on M-series Macbooks. I'm testing on Air with an M2.
 
 ```shell
 # Set primary input to USBC
@@ -28,12 +28,18 @@ I'm using [my fork](https://github.com/ekamil/m1ddc/pull/1/files) with added sup
 ```
 
 ## Examples with ddcutil
+
+See [docs for ddcutil](https://www.ddcutil.com/).
+
 ### PBP
+
 ```shell
 # USBC, HDMI1, DP1, DP2 in a 2x2 grid
 ddcutil setvcp E9 0x41 60 0x1B E8 0x4df2
 ```
+
 ### KVM
+
 KVM assigns USB output port to an input (HDMI, DP, ...), one USB can be assigned to multiple inputs. Not sure how it works then.
 
 ```shell
